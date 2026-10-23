@@ -1,144 +1,205 @@
-# RateSpace — Store Rating Web Application (NexaPrime Coding Challenge)
+# Store Rating Web Application — NexaPrime Coding Challenge
 
-A production-ready full-stack web application built with **Next.js (App Router)**, **Node.js + Express**, and **MongoDB (Mongoose)** that enables customers to browse registered stores, submit or update 1-to-5 star ratings, and allows store owners to monitor store ratings and customer feedback analytics.
+Full-stack Store Rating Web Application built for the **NexaPrime Pvt. Ltd. Full Stack Intern Coding Challenge**. Registered users can browse and search stores, view overall store ratings, and submit or update their own 1-to-5 star ratings. Store owners can sign in to a dedicated merchant analytics dashboard to view their store's average rating, rating distribution breakdown, and customer review submissions.
 
-## Key Features & Resolved Bugs
+## 1. Live Deployment & Repository Links
 
-1. **Working Authentication & Role-Based Redirection**:
-   - Supports **Normal User (`user`)** and **Store Owner (`owner`)** roles.
-   - Pre-configured `.env` and `.env.local` files plus automatic database seeding ensure Login and Create Account work immediately out of the box.
-   - One-click **Demo Sign In** and **Auto-Fill** buttons on both the Login and Create Account pages.
-   - Store Owners can create and link their store directly during registration or from the Owner Console.
-2. **Normal User Dashboard (`/dashboard`)**:
-   - View all registered stores with name, category, address, average rating, and review count.
-   - Instant search bar with **Search Stores** and **Reset** buttons, status filters (`All Stores`, `Rated by Me`, `Not Rated Yet`, `Top Rated 4.5+`), and sorting (`Name A–Z`, `Highest Rated`, `Most Reviewed`).
-   - Interactive 1-to-5 star rating buttons plus an explicit **Submit Rating** / **Update Rating** button and **Details** breakdown modal on every store card.
-3. **Store Owner Console (`/owner`)**:
-   - Displays portfolio KPI summary cards (`Managed Stores`, `Portfolio Average Rating`, `Total Customer Reviews`).
-   - Visual 5-star to 1-star rating distribution bars, customer ratings table with star filters, **Register New Store** button, and **Export Ratings CSV** button.
-4. **Resilient Storage Architecture**:
-   - Connects natively to **MongoDB** (`MONGODB_URI`) using Mongoose models (`User`, `Store`, `Rating`).
-   - Includes an automatic persistent JSON datastore fallback (`backend/data/local_db.json`) if a local MongoDB daemon is not running, preventing server startup crashes.
+| Submission Deliverable | Link / Endpoint |
+| :--- | :--- |
+| **GitHub Repository** | https://github.com/sonalee1119/Store_Rating_Web_Application_NexaPrime |
+| **Live Frontend Deployment (Vercel)** | https://store-rating-web-application-nexa-p.vercel.app |
+| **Backend API Base URL (Vercel / Render)** | https://store-rating-web-application-nexa-p.vercel.app/api |
+| **Backend Health Check Endpoint** | https://store-rating-web-application-nexa-p.vercel.app/api/health |
 
-## Project Folder Structure
+## 2. Technologies Used
 
-```text
-store-rating-web-app/
-├── README.md
-├── package.json
-├── backend/
-│   ├── package.json
-│   ├── .env
-│   ├── .env.example
-│   ├── render.yaml
-│   ├── data/
-│   │   ├── seedData.js
-│   │   └── local_db.json
-│   ├── src/
-│   │   ├── server.js
-│   │   ├── app.js
-│   │   ├── seed.js
-│   │   ├── config/
-│   │   │   ├── db.js
-│   │   │   └── env.js
-│   │   ├── controllers/
-│   │   │   ├── authController.js
-│   │   │   ├── storeController.js
-│   │   │   └── ownerController.js
-│   │   ├── middleware/
-│   │   │   ├── authMiddleware.js
-│   │   │   └── errorHandler.js
-│   │   ├── models/
-│   │   │   ├── User.js
-│   │   │   ├── Store.js
-│   │   │   └── Rating.js
-│   │   ├── routes/
-│   │   │   ├── authRoutes.js
-│   │   │   ├── storeRoutes.js
-│   │   │   └── ownerRoutes.js
-│   │   ├── services/
-│   │   │   └── dataStore.js
-│   │   └── utils/
-│   │       ├── cryptoAuth.js
-│   │       ├── httpAdapter.js
-│   │       └── validators.js
-│   └── tests/
-│       └── api.test.js
-└── frontend/
-    ├── package.json
-    ├── next.config.mjs
-    ├── vercel.json
-    ├── .env.local
-    ├── .env.example
-    ├── app/
-    │   ├── layout.js
-    │   ├── globals.css
-    │   ├── page.js
-    │   ├── login/page.js
-    │   ├── register/page.js
-    │   ├── dashboard/page.js
-    │   └── owner/page.js
-    ├── components/
-    │   ├── Icon.js
-    │   ├── Navbar.js
-    │   ├── Footer.js
-    │   ├── StarRating.js
-    │   └── StoreCard.js
-    └── lib/
-        ├── api.js
-        └── validation.js
+| Layer | Technology Stack |
+| :--- | :--- |
+| **Frontend** | Next.js 14 (App Router), React 18, Custom Responsive CSS Design System, Inline SVG Iconography |
+| **Backend** | Node.js, Express.js REST API |
+| **Database** | MongoDB with Mongoose ODM (`User`, `Store`, and `Rating` schemas) + Built-in Local JSON Fallback (`backend/data/local_db.json`) |
+| **Authentication & Security** | JSON Web Tokens (`jsonwebtoken`), Bcrypt Password Hashing (`bcryptjs`), Role-Based Access Control (`user` and `owner` roles) |
+| **Deployment** | Vercel (Frontend), Render (Backend Web Service), MongoDB Atlas (Cloud Database) |
+
+## 3. Pre-Seeded Test Account Credentials
+
+The application is pre-seeded with test accounts for both required user roles (**Normal User** and **Store Owner**). Evaluators can sign in using these credentials or click the one-click demo login buttons on `/login`:
+
+| User Role | Full Name | Email Address | Password | Redirect Dashboard |
+| :--- | :--- | :--- | :--- | :--- |
+| **Normal User** | Aarav Deshmukh (Customer Account) | `aarav.sharma@nexaprime.in` | `Welcome@123` | `/dashboard` |
+| **Normal User** | Priya Nandakumar Nair (Customer) | `priya.nair@nexaprime.in` | `Welcome@123` | `/dashboard` |
+| **Normal User** | Rohan Rajendra Joshi (Customer) | `rohan.joshi@nexaprime.in` | `Welcome@123` | `/dashboard` |
+| **Store Owner** | Vikramaditya Kulkarni (Store Owner) | `vikram.kulkarni@nexaprime.in` | `Owner@1234` | `/owner` |
+| **Store Owner** | Siddharth Deshpande (Demo Owner) | `owner.demo@example.com` | `Owner@1234` | `/owner` |
+
+## 4. Required Environment Variables
+
+### Backend (`store-rating-web-app/backend/.env`)
+
+```ini
+PORT=5000
+MONGODB_URI=mongodb://127.0.0.1:27017/store_rating_app
+JWT_SECRET=replace_with_a_long_random_secret_key
+CLIENT_ORIGIN=http://localhost:3000
 ```
 
-## How to Run Locally
+| Variable | Description | Example / Default |
+| :--- | :--- | :--- |
+| `PORT` | Port number for the Express API server | `5000` |
+| `MONGODB_URI` | MongoDB local or MongoDB Atlas connection URI | `mongodb://127.0.0.1:27017/store_rating_app` |
+| `JWT_SECRET` | Secret key used to sign and verify JWT tokens | `nexaprime_store_rating_jwt_secret_key_2026` |
+| `CLIENT_ORIGIN` | Allowed frontend origin URL for CORS | `http://localhost:3000` |
+
+### Frontend (`store-rating-web-app/frontend/.env.local`)
+
+```ini
+NEXT_PUBLIC_API_URL=http://localhost:5000/api
+```
+
+| Variable | Description | Example / Default |
+| :--- | :--- | :--- |
+| `NEXT_PUBLIC_API_URL` | Base URL for backend API requests | `http://localhost:5000/api` |
+
+## 5. Local Setup & Run Instructions
 
 ### Prerequisites
-- **Node.js** v18+ (or v20+)
-- **MongoDB** (Local MongoDB instance or MongoDB Atlas URI; if local MongoDB is not running, the backend automatically uses its built-in persistent JSON datastore)
 
-### Step 1: Extract and Start the Backend API
-Open a terminal in the project root folder and run:
+* **Node.js**: v18.0.0 or higher
+* **MongoDB**: Local MongoDB instance or MongoDB Atlas connection string (if a local MongoDB instance is not running, the backend automatically falls back to its persistent JSON datastore at `backend/data/local_db.json`)
+
+### Step 1: Clone the Repository
+
+```bash
+git clone [https://github.com/sonalee1119/Store_Rating_Web_Application_NexaPrime.git](https://github.com/sonalee1119/Store_Rating_Web_Application_NexaPrime.git)
+cd Store_Rating_Web_Application_NexaPrime/store-rating-web-app
+```
+
+### Step 2: Setup and Start the Backend API
 
 ```bash
 cd backend
 npm install
+cp .env.example .env
 npm run seed
 npm run dev
 ```
-- The backend API starts at `http://localhost:5000` (health check: `http://localhost:5000/api/health`).
-- Run automated API tests anytime with:
+
+* The backend server runs at `http://localhost:5000` (health check: `http://localhost:5000/api/health`).
+* To run the automated backend API test suite (8 integration tests):
   ```bash
   npm test
   ```
 
-### Step 2: Start the Frontend Web Application
-Open a second terminal in the project root folder and run:
+### Step 3: Setup and Start the Frontend Application
+
+Open a second terminal window inside `Store_Rating_Web_Application_NexaPrime/store-rating-web-app`:
 
 ```bash
 cd frontend
 npm install
+cp .env.example .env.local
 npm run dev
 ```
-- Open `http://localhost:3000` in your browser.
 
-## Pre-Seeded Test Account Credentials
+* Open `http://localhost:3000` in your browser.
 
-| Role | Email | Password | Dashboard Route |
-| :--- | :--- | :--- | :--- |
-| **Normal User (Customer)** | `aarav.sharma@nexaprime.in` | `Welcome@123` | `/dashboard` |
-| **Normal User 2 (Customer)** | `priya.nair@nexaprime.in` | `Welcome@123` | `/dashboard` |
-| **Store Owner (Merchant)** | `vikram.kulkarni@nexaprime.in` | `Owner@1234` | `/owner` |
-| **Store Owner 2 (Demo)** | `owner.demo@example.com` | `Owner@1234` | `/owner` |
+## 6. Project Folder Structure
 
-## REST API Endpoints
+```text
+Store_Rating_Web_Application_NexaPrime/
+├── README.md
+├── .gitignore
+└── store-rating-web-app/
+    ├── README.md
+    ├── package.json
+    ├── backend/
+    │   ├── package.json
+    │   ├── .env.example
+    │   ├── render.yaml
+    │   ├── data/
+    │   │   ├── seedData.js
+    │   │   └── local_db.json
+    │   ├── src/
+    │   │   ├── server.js
+    │   │   ├── app.js
+    │   │   ├── seed.js
+    │   │   ├── config/
+    │   │   │   ├── db.js
+    │   │   │   └── env.js
+    │   │   ├── controllers/
+    │   │   │   ├── authController.js
+    │   │   │   ├── storeController.js
+    │   │   │   └── ownerController.js
+    │   │   ├── middleware/
+    │   │   │   ├── authMiddleware.js
+    │   │   │   └── errorHandler.js
+    │   │   ├── models/
+    │   │   │   ├── User.js
+    │   │   │   ├── Store.js
+    │   │   │   └── Rating.js
+    │   │   ├── routes/
+    │   │   │   ├── authRoutes.js
+    │   │   │   ├── storeRoutes.js
+    │   │   │   └── ownerRoutes.js
+    │   │   ├── services/
+    │   │   │   └── dataStore.js
+    │   │   └── utils/
+    │   │       ├── cryptoAuth.js
+    │   │       ├── httpAdapter.js
+    │   │       └── validators.js
+    │   └── tests/
+    │       └── api.test.js
+    └── frontend/
+        ├── package.json
+        ├── next.config.mjs
+        ├── vercel.json
+        ├── .env.example
+        ├── app/
+        │   ├── layout.js
+        │   ├── globals.css
+        │   ├── page.js
+        │   ├── login/page.js
+        │   ├── register/page.js
+        │   ├── dashboard/page.js
+        │   └── owner/page.js
+        ├── components/
+        │   ├── Icon.js
+        │   ├── Navbar.js
+        │   ├── Footer.js
+        │   ├── StarRating.js
+        │   └── StoreCard.js
+        └── lib/
+            ├── api.js
+            └── validation.js
+```
+
+## 7. Functional Features & Validation Rules
+
+### Functional Overview
+
+* **Authentication (`/login` & `/register`)**: User registration and login with JWT session management, password hashing, and automatic role-based redirection (`/dashboard` for Normal Users, `/owner` for Store Owners).
+* **Normal User Dashboard (`/dashboard`)**: View all registered stores, search stores by name or address, filter by rating status, view each store's average rating, submit a new 1-to-5 star rating, and update previously submitted ratings.
+* **Store Owner Console (`/owner`)**: View store performance KPIs, average store rating, 5-star to 1-star rating distribution bars, and a filterable table of users who have rated the store.
+
+### Validation Rules Implemented
+
+* **Name**: 20–60 characters standard validation (with a one-click helper on the registration form).
+* **Address**: Maximum 400 characters.
+* **Password**: 8–16 characters, including at least one uppercase letter and one special character.
+* **Email**: Standard valid email format.
+* **Rating**: Whole number from 1 to 5 (one rating per user per store, updatable anytime).
+
+## 8. REST API Endpoints
 
 | Method | Endpoint | Access | Description |
 | :--- | :--- | :--- | :--- |
-| `GET` | `/api/health` | Public | Server & database connectivity check |
+| `GET` | `/api/health` | Public | API health and storage status check |
 | `POST` | `/api/auth/register` | Public | Register a Normal User or Store Owner account |
 | `POST` | `/api/auth/login` | Public | Authenticate user and return signed JWT |
-| `GET` | `/api/auth/me` | Authenticated | Retrieve current user profile |
-| `GET` | `/api/stores` | Authenticated | List & search stores (`?search=&sort=`) |
-| `GET` | `/api/stores/:id` | Authenticated | View single store details and rating distribution |
+| `GET` | `/api/auth/me` | Authenticated | Get current logged-in user details |
+| `GET` | `/api/stores` | Authenticated | List all registered stores (`?search=&sort=`) |
+| `GET` | `/api/stores/:id` | Authenticated | Get single store details and rating breakdown |
 | `POST` / `PUT` | `/api/stores/:id/ratings` | Authenticated | Submit (1–5) or update rating for a store |
-| `GET` | `/api/owner/dashboard` | Store Owner | View owner stores, average scores, and customer ratings |
-| `POST` | `/api/owner/stores` | Store Owner | Register an additional store under owner account |
+| `GET` | `/api/owner/dashboard` | Store Owner | View owner stores, average rating, and customer ratings |
+| `POST` | `/api/owner/stores` | Store Owner | Register an additional store for the authenticated owner |
